@@ -5,17 +5,17 @@ import numpy as np
 class YoloModel:
     def __init__(self, cfg_path, weights_path, confidence_threshold=0.3, nms_threshold=0.4):
         self.net = cv2.dnn.readNet(weights_path, cfg_path)
-        self.confidence_threshold = confidence_threshold
-        self.nms_threshold = nms_threshold
-        self.width = 416
-        self.height = 416
+        self.confidence_threshold = float(confidence_threshold)
+        self.nms_threshold = float(nms_threshold)
+        self.net_width = 416
+        self.net_height = 416
         layers = self.net.getLayerNames()
         self.ln = [layers[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
 
     def predict(self, image):
-        (width, height) = image.shape[:2]
+        (height, width) = image.shape[:2]
 
-        blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (self.width, self.height), swapRB=True, crop=False)
+        blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (self.net_width, self.net_height), swapRB=True, crop=False)
 
         self.net.setInput(blob)
 
@@ -36,15 +36,15 @@ class YoloModel:
                 if confidence > self.confidence_threshold:
                     box = detection[0:4] * np.array([width, height, width, height])
 
-                    (centerX, centerY, width, height) = box.astype("int")
-                    x = int(centerX - (width / 2))
-                    y = int(centerY - (height / 2))
+                    (center_x, center_y, w, h) = box.astype("int")
+                    x = int(center_x - (w / 2))
+                    y = int(center_y - (h / 2))
 
-                    boxes.append([x, y, int(width), int(height)])
+                    boxes.append([x, y, int(w), int(h)])
                     confidences.append(float(confidence))
                     class_ids.append(class_id)
 
-        ids = cv2.dnn.NMSBoxes(boxes, confidences, class_ids, self.confidence_threshold, self.nms_threshold)
+        ids = cv2.dnn.NMSBoxes(boxes, confidences, self.confidence_threshold, self.nms_threshold)
 
         result = []  # x, y, w, h
         if len(ids) > 0:

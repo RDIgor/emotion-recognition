@@ -19,4 +19,14 @@ if __name__ == '__main__':
     with open(config_path) as json_file:
         config = json.load(json_file)
 
+    yolo_model = YoloModel(config["detection"]["config"], config["detection"]["weights"])
+
+    image = utils.load_image(args['image'])
+    image = utils.resize(image, 1024, 768)
+
+    boxes = yolo_model.predict(image)
+
+    utils.draw_boxes(image, boxes)
+    utils.show_image('test', image)
+
 
