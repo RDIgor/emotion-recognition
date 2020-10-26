@@ -22,7 +22,7 @@ def dlib_rect_to_box(rect):
     return x, y, w, h
 
 
-class FaceLandmarkDetection:
+class FaceLandmarkDetectionModel:
     def __init__(self, model_path):
         self.detector = dlib.get_frontal_face_detector()
         self.predictor = dlib.shape_predictor(model_path)
