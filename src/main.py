@@ -3,7 +3,7 @@ import json
 import os
 from src.models.yolo import YoloModel
 from src.models.face_detection_model import FaceDetectionModel
-from src.models.face_landmark_detection import FaceLandmarkDetection
+from src.models.face_landmark_detection import FaceLandmarkDetectionModel
 from src import utils
 
 ap = argparse.ArgumentParser()
@@ -21,7 +21,7 @@ if __name__ == '__main__':
     with open(config_path) as json_file:
         config = json.load(json_file)
 
-    model = FaceLandmarkDetection(config["face_landmark_detection"]["weights"])
+    model = FaceLandmarkDetectionModel(config["face_landmark_detection"]["weights"])
 
     image = utils.load_image(args['image'])
 
