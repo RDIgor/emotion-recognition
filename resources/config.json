@@ -1,0 +1,15 @@
+{
+  "detection": {
+    "config": "/opt/yolov3/yolov3.cfg",
+    "weights": "/opt/yolov3/yolov3.weights"
+  },
+  "face_detection": {
+    "config": "/opt/caffe_face_detection/config.prototxt",
+    "weights": "/opt/caffe_face_detection/res.caffemodel",
+    "confidence": 0.6,
+    "device": "gpu"
+  },
+  "face_landmark_detection": {
+    "weights": "/opt/dlib_model/shape_predictor_68_face_landmarks.dat"
+  }
+}

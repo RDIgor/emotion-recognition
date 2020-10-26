@@ -2,6 +2,8 @@ import argparse
 import json
 import os
 from src.models.yolo import YoloModel
+from src.models.face_detection_model import FaceDetectionModel
+from src.models.face_landmark_detection import FaceLandmarkDetection
 from src import utils
 
 ap = argparse.ArgumentParser()
@@ -19,14 +21,13 @@ if __name__ == '__main__':
     with open(config_path) as json_file:
         config = json.load(json_file)
 
-    yolo_model = YoloModel(config["detection"]["config"], config["detection"]["weights"])
+    model = FaceLandmarkDetection(config["face_landmark_detection"]["weights"])
 
     image = utils.load_image(args['image'])
-    image = utils.resize(image, 1024, 768)
 
-    boxes = yolo_model.predict(image)
+    dictionary = model.predict(image)
 
-    utils.draw_boxes(image, boxes)
+    utils.draw_face_landmarks(image, dictionary)
     utils.show_image('test', image)
 
 
