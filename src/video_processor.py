@@ -2,7 +2,7 @@ import cv2
 import json
 from video_writer import VideoWriter
 from src.models.face_landmark_prediction_model import FaceLandmarkPredictionModel
-from src.models.face_detection_model import FaceDetectionModel
+from src.models.cv_face_detection_model import CvFaceDetectionModel
 from src.models.dlib_face_detection_model import DlibFaceDetectionModel
 from src import utils
 
@@ -51,6 +51,10 @@ class VideoProcessor:
 
             cv2.imshow("image", frame)
             key = cv2.waitKey(1)
+
+            if key == 27:
+                print("processing stopped")
+                return
 
     @staticmethod
     def close():

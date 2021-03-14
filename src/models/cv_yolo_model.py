@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 
-class YoloModel:
+class CvYoloModel:
     def __init__(self, cfg_path, weights_path, confidence_threshold=0.3, nms_threshold=0.4):
         self.net = cv2.dnn.readNet(weights_path, cfg_path)
         self.confidence_threshold = float(confidence_threshold)
