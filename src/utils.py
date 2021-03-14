@@ -25,9 +25,8 @@ def draw_boxes(image, boxes):
 
 
 def draw_landmarks(image, landmarks):
-    for face_landmarks in landmarks:
-        for (landmark_x, landmark_y) in face_landmarks:
-            cv2.circle(image, (landmark_x, landmark_y), 3, (0, 0, 255), -1)
+    for (landmark_x, landmark_y) in landmarks:
+        cv2.circle(image, (landmark_x, landmark_y), 3, (0, 0, 255), -1)
 
 
 def draw_face_landmarks(image, list_dictionary):
@@ -38,3 +37,29 @@ def draw_face_landmarks(image, list_dictionary):
 
             for (landmark_x, landmark_y) in shape:
                 cv2.circle(image, (landmark_x, landmark_y), 3, (0, 0, 255), -1)
+
+
+# 0 - x, 1 -y, w - 2, h - 3
+def clip_rects(image, rects):
+    result = []
+
+    (image_h, image_w, channels) = image.shape
+
+    for rect in rects:
+        (x, y, w, h) = rect
+
+        if x < 0:
+            x = 0
+
+        if y < 0:
+            y = 0
+
+        if x + w > image_w:
+            w = image_h - x
+
+        if y + h > image_h:
+            h = image_h - y
+
+        result.append((x, y, w, h))
+
+    return result

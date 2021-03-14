@@ -1,7 +1,8 @@
 import dlib
+from src.models.base_model import BaseModel
 
 
-class DlibFaceDetectionModel:
+class DlibFaceDetectionModel(BaseModel):
     def __init__(self, weights):
         self.face_detector = dlib.cnn_face_detection_model_v1(weights)
 

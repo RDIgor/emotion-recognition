@@ -1,5 +1,6 @@
 import cv2
 import json
+import src.models.base_model
 from video_writer import VideoWriter
 from src.models.face_landmark_prediction_model import FaceLandmarkPredictionModel
 from src.models.cv_face_detection_model import CvFaceDetectionModel
@@ -42,12 +43,30 @@ class VideoProcessor:
             # detect faces
             faces = self.face_model.predict(frame)
 
-            # detect landmarks
-            landmarks = self.landmark_model.predict(frame, faces)
+            clipped_faces = utils.clip_rects(frame, faces)
 
-            # utils.draw_face_landmarks(frame, detections)
-            utils.draw_boxes(frame, faces)
-            utils.draw_landmarks(frame, landmarks)
+            remapped_landmarks = []
+
+            for face in clipped_faces:
+                (face_x, face_y, face_w, face_h) = face
+
+                face_image = frame[int(face_y): int(face_y + face_h), int(face_x): int(face_x + face_w)]
+
+                # detect landmarks
+                face_landmarks = self.landmark_model.predict(face_image)
+
+                # remap landmarks for original image
+                remapped_face_landmarks = []
+
+                for (x, y) in face_landmarks:
+                    remapped_face_landmarks.append((face_x + x, face_y + y))
+
+                remapped_landmarks.append(remapped_face_landmarks)
+
+            utils.draw_boxes(frame, clipped_faces)
+
+            for face_landmarks in remapped_landmarks:
+                utils.draw_landmarks(frame, face_landmarks)
 
             cv2.imshow("image", frame)
             key = cv2.waitKey(1)

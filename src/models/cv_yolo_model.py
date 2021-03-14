@@ -1,8 +1,9 @@
 import cv2
 import numpy as np
+from src.models.base_model import BaseModel
 
 
-class CvYoloModel:
+class CvYoloModel(BaseModel):
     def __init__(self, cfg_path, weights_path, confidence_threshold=0.3, nms_threshold=0.4):
         self.net = cv2.dnn.readNet(weights_path, cfg_path)
         self.confidence_threshold = float(confidence_threshold)

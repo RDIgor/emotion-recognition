@@ -1,7 +1,8 @@
 import cv2
+from src.models.base_model import BaseModel
 
 
-class CvFaceDetectionModel:
+class CvFaceDetectionModel(BaseModel):
     def __init__(self, config_path, model_path, confidence_threshold=0.4, device="cpu"):
         self.net = cv2.dnn.readNet(model_path, config_path)
 
