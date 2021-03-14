@@ -16,7 +16,7 @@ class FaceDetectionModel:
     def predict(self, image):
         (height, width) = image.shape[:2]
 
-        blob = cv2.dnn.blobFromImage(image, 1.0, (300, 300), [104, 117, 123], False, False)
+        blob = cv2.dnn.blobFromImage(image, 1.0, (300, 300), [104, 117, 123], True, False)
 
         self.net.setInput(blob)
 
