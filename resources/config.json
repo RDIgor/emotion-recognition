@@ -4,12 +4,12 @@
     "weights": "/opt/yolov3/yolov3.weights"
   },
   "face_detection": {
-    "config": "/opt/caffe_face_detection/config.prototxt",
-    "weights": "/opt/caffe_face_detection/res.caffemodel",
+    "config": "/opt/caffe_face_detection/deploy.prototxt",
+    "weights": "/opt/dlib_model/mmod_human_face_detector.dat",
     "confidence": 0.6,
     "device": "gpu"
   },
   "face_landmark_detection": {
-    "weights": "/opt/dlib_model/shape_predictor_68_face_landmarks.dat"
+    "weights": "/opt/dlib_model/backup/predictor.dat"
   }
 }
