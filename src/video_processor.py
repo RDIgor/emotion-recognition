@@ -1,11 +1,9 @@
 import cv2
 import json
-import src.models.base_model
-from video_writer import VideoWriter
-from src.models.face_landmark_prediction_model import FaceLandmarkPredictionModel
-from src.models.cv_face_detection_model import CvFaceDetectionModel
-from src.models.dlib_face_detection_model import DlibFaceDetectionModel
-from src import utils
+import utils
+import numpy as np
+from models.face_landmark_prediction_model import FaceLandmarkPredictionModel
+from models.retina_face_model import RetinaFaceModel
 
 
 class VideoProcessor:
@@ -15,8 +13,7 @@ class VideoProcessor:
             self.json_config = json.load(json_file)
 
         # load face detection model
-        self.face_model = DlibFaceDetectionModel(
-            self.json_config["face_detection"]["weights"])
+        self.face_model = RetinaFaceModel("/opt/R50-model/", 0, -1, 'net3')
 
         # load landmark model
         self.landmark_model = FaceLandmarkPredictionModel(self.json_config["face_landmark_detection"]["weights"])
@@ -41,13 +38,15 @@ class VideoProcessor:
                 return
 
             # detect faces
-            faces = self.face_model.predict(frame)
+            (faces, five_landmarks) = self.face_model.predict(frame)
 
+            # clip faces
             clipped_faces = utils.clip_rects(frame, faces)
 
             remapped_landmarks = []
 
             for face in clipped_faces:
+                # crop face
                 (face_x, face_y, face_w, face_h) = face
 
                 face_image = frame[int(face_y): int(face_y + face_h), int(face_x): int(face_x + face_w)]
@@ -63,6 +62,7 @@ class VideoProcessor:
 
                 remapped_landmarks.append(remapped_face_landmarks)
 
+            # fraw results on the image
             utils.draw_boxes(frame, clipped_faces)
 
             for face_landmarks in remapped_landmarks:
@@ -70,10 +70,6 @@ class VideoProcessor:
 
             cv2.imshow("image", frame)
             key = cv2.waitKey(1)
-
-            if key == 27:
-                print("processing stopped")
-                return
 
     @staticmethod
     def close():
