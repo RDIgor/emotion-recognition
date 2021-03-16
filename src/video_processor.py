@@ -62,14 +62,22 @@ class VideoProcessor:
 
                 remapped_landmarks.append(remapped_face_landmarks)
 
-            # fraw results on the image
+            ####################### draw results on the image #######################
             utils.draw_boxes(frame, clipped_faces)
 
-            for face_landmarks in remapped_landmarks:
-                utils.draw_landmarks(frame, face_landmarks)
+            for face_remapped_landmarks in remapped_landmarks:
+                utils.draw_landmarks(frame, face_remapped_landmarks)
+
+            for face_five_landmarks in five_landmarks:
+                utils.draw_landmarks(frame, face_five_landmarks, (0, 255, 0))
+            #######################                           #######################
 
             cv2.imshow("image", frame)
             key = cv2.waitKey(1)
+
+            if key == 27:
+                print("processing stopped")
+                return
 
     @staticmethod
     def close():
