@@ -4,8 +4,8 @@
     "weights": "/opt/yolov3/yolov3.weights"
   },
   "face_detection": {
-    "config": "/opt/caffe_face_detection/deploy.prototxt",
-    "weights": "/opt/dlib_model/mmod_human_face_detector.dat",
+    "config": "/opt/R50-model/R50-symbol.json",
+    "weights": "/opt/R50-model/R50-0000.params",
     "confidence": 0.6,
     "device": "gpu"
   },
