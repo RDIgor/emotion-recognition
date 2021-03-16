@@ -2,8 +2,8 @@ import cv2
 import json
 import utils
 import numpy as np
-from models.face_landmark_prediction_model import FaceLandmarkPredictionModel
-from models.retina_face_model import RetinaFaceModel
+from face_processor import FaceProcessor
+from face_detector import FaceDetector
 
 
 class VideoProcessor:
@@ -12,11 +12,9 @@ class VideoProcessor:
         with open(args["config"]) as json_file:
             self.json_config = json.load(json_file)
 
-        # load face detection model
-        self.face_model = RetinaFaceModel("/opt/R50-model/", 0, -1, 'net3')
+        self.face_detector = FaceDetector()
 
-        # load landmark model
-        self.landmark_model = FaceLandmarkPredictionModel(self.json_config["face_landmark_detection"]["weights"])
+        self.face_processor = FaceProcessor(self.json_config)
 
         # open video file
         self.capture = cv2.VideoCapture(args['input'])
@@ -26,6 +24,14 @@ class VideoProcessor:
 
         if not self.capture.isOpened():
             print('Video file does not open')
+        else:
+            self.window_name = "result"
+
+            cv2.namedWindow(self.window_name)
+            cv2.createTrackbar("", self.window_name, 0, int(self.capture.get(cv2.CAP_PROP_FRAME_COUNT)), self.on_trackbar)
+
+    def on_trackbar(self, val):
+        self.capture.set(cv2.CAP_PROP_POS_FRAMES, val)
 
     def start(self):
         while True:
@@ -37,48 +43,41 @@ class VideoProcessor:
 
                 return
 
-            # detect faces
-            (faces, five_landmarks) = self.face_model.predict(frame)
-
-            # clip faces
-            clipped_faces = utils.clip_rects(frame, faces)
+            (faces, five_landmarks) = self.face_detector.detect(frame)
 
             remapped_landmarks = []
 
-            for face in clipped_faces:
-                # crop face
-                (face_x, face_y, face_w, face_h) = face
+            for i in range(0, len(faces)):
+                face = faces[i]
+                face_five_landmarks = five_landmarks[i]
 
-                face_image = frame[int(face_y): int(face_y + face_h), int(face_x): int(face_x + face_w)]
+                remapped_landmarks.append(self.face_processor.process(frame, face, face_five_landmarks))
 
-                # detect landmarks
-                face_landmarks = self.landmark_model.predict(face_image)
+            self.draw_debug(frame, faces, five_landmarks, remapped_landmarks)
 
-                # remap landmarks for original image
-                remapped_face_landmarks = []
-
-                for (x, y) in face_landmarks:
-                    remapped_face_landmarks.append((face_x + x, face_y + y))
-
-                remapped_landmarks.append(remapped_face_landmarks)
-
-            ####################### draw results on the image #######################
-            utils.draw_boxes(frame, clipped_faces)
-
-            for face_remapped_landmarks in remapped_landmarks:
-                utils.draw_landmarks(frame, face_remapped_landmarks)
-
-            for face_five_landmarks in five_landmarks:
-                utils.draw_landmarks(frame, face_five_landmarks, (0, 255, 0))
-            #######################                           #######################
-
-            cv2.imshow("image", frame)
-            key = cv2.waitKey(1)
-
-            if key == 27:
-                print("processing stopped")
-                return
+            self.show(self.window_name, frame)
 
     @staticmethod
     def close():
         print('close video processor')
+
+    @staticmethod
+    def draw_debug(frame, faces, five_landmarks, face_landmarks):
+        ####################### draw results on the image #######################
+        utils.draw_boxes(frame, faces)
+
+        for face_landmarks in face_landmarks:
+            utils.draw_landmarks(frame, face_landmarks)
+
+        for face_five_landmarks in five_landmarks:
+            utils.draw_landmarks(frame, face_five_landmarks, (0, 255, 0))
+        #######################                           #######################
+
+    @staticmethod
+    def show(window_name, frame):
+        cv2.imshow(window_name, frame)
+        key = cv2.waitKey(1)
+
+        if key == 27:
+            print("processing stopped")
+            exit(1)
