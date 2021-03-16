@@ -1,2 +1,2 @@
-# emotion-recognition
-Emotion recognition project
+# smile-recognition
+Smile recognition project

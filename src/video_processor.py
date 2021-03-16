@@ -71,10 +71,6 @@ class VideoProcessor:
             cv2.imshow("image", frame)
             key = cv2.waitKey(1)
 
-            if key == 27:
-                print("processing stopped")
-                return
-
     @staticmethod
     def close():
         print('close video processor')
