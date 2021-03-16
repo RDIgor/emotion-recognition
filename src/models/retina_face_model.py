@@ -839,6 +839,6 @@ class RetinaFaceModel:
 
         for i in range(faces.shape[0]):
             face = faces[i]
-            result.append((int(face[0]), int(face[1]), int(face[2] - face[0]), int(face[3] - face[1])))
+            result.append([int(face[0]), int(face[1]), int(face[2] - face[0]), int(face[3] - face[1])])
 
         return result
