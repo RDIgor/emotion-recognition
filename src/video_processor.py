@@ -8,11 +8,11 @@ from image_processor import ImageProcessor
 class VideoProcessor:
     def __init__(self, args):
         # open config
-        with open(args["config"]) as json_file:
+        with open(args.config) as json_file:
             json_config = json.load(json_file)
 
         # open video file
-        self.capture = cv2.VideoCapture(args['input'])
+        self.capture = cv2.VideoCapture(args.input)
 
         # open video writer
         # self.video_writer = VideoWriter("output.avi", 640, 640)
@@ -20,7 +20,7 @@ class VideoProcessor:
         if not self.capture.isOpened():
             print('Video file does not open')
         else:
-            self.image_processor = ImageProcessor(json_config)
+            self.image_processor = ImageProcessor(json_config, args)
             self.window_name = "result"
 
             cv2.namedWindow(self.window_name)

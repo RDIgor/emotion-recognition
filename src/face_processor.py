@@ -1,6 +1,6 @@
-from face_aligner import FaceAligner
-from models.face_landmark_prediction_model import FaceLandmarkPredictionModel
-from utils import crop_image
+from src.face_aligner import FaceAligner
+from src.models.face_landmark_prediction_model import FaceLandmarkPredictionModel
+from src.utils import crop_image
 
 
 class FaceProcessor:
