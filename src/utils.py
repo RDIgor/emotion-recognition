@@ -31,7 +31,8 @@ def draw_boxes(image, boxes, color=(0, 255, 0)):
 
 def draw_landmarks(image, landmarks, color = (0, 0, 255)):
     for (landmark_x, landmark_y) in landmarks:
-        cv2.circle(image, (landmark_x, landmark_y), 3, color, -1)
+        cv2.circle(image, (int(landmark_x), int(landmark_y)), 3, color, -1)
+
 
 def draw_face_landmarks(image, list_dictionary):
     for dictionary in list_dictionary:
@@ -64,6 +65,6 @@ def clip_rects(image, rects):
         if y + h > image_h:
             h = image_h - y
 
-        result.append((x, y, w, h))
+        result.append([x, y, w, h])
 
     return result

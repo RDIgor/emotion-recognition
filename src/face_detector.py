@@ -1,5 +1,5 @@
-from models.retina_face_model import RetinaFaceModel
-from utils import clip_rects
+from src.models.retina_face_model import RetinaFaceModel
+from src.utils import clip_rects
 
 
 class FaceDetector:
