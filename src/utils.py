@@ -1,6 +1,11 @@
 import cv2
 
 
+def crop_image(frame, box):
+    (x, y, w, h) = box
+    return frame[int(y): int(y + h), int(x): int(x + w)]
+
+
 def load_image(file_name):
     return cv2.imread(file_name)
 
@@ -19,14 +24,14 @@ def draw_bboxes(image, boxes):
         cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 4)
 
 
-def draw_boxes(image, boxes):
+def draw_boxes(image, boxes, color=(0, 255, 0)):
     for (x, y, w, h) in boxes:
-        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 4)
+        cv2.rectangle(image, (x, y), (x + w, y + h), color, 4)
 
 
 def draw_landmarks(image, landmarks, color = (0, 0, 255)):
     for (landmark_x, landmark_y) in landmarks:
-        cv2.circle(image, (landmark_x, landmark_y), 3, color, -1)
+        cv2.circle(image, (int(landmark_x), int(landmark_y)), 3, color, -1)
 
 
 def draw_face_landmarks(image, list_dictionary):
@@ -60,6 +65,6 @@ def clip_rects(image, rects):
         if y + h > image_h:
             h = image_h - y
 
-        result.append((x, y, w, h))
+        result.append([x, y, w, h])
 
     return result
