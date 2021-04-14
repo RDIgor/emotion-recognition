@@ -1,17 +1,6 @@
 import argparse
 from video_processor import VideoProcessor
-
-
-def str2bool(v):
-    if isinstance(v, bool):
-       return v
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
-        return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-        return False
-    else:
-        raise argparse.ArgumentTypeError('Boolean value expected.')
-
+from utils import str2bool
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--input", required=False, help="path to input image or video")

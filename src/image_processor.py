@@ -1,7 +1,7 @@
-from face_detector import FaceDetector
-from face_processor import FaceProcessor
-from http_request_maker import HTTPRequestMaker
-from common import Face
+from src.face_detector import FaceDetector
+from src.face_processor import FaceProcessor
+from src.http_request_maker import HTTPRequestMaker
+from src.common import Face
 import cv2
 
 

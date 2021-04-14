@@ -1,4 +1,16 @@
 import cv2
+import argparse
+
+
+def str2bool(v):
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
 
 
 def crop_image(frame, box):
@@ -29,9 +41,9 @@ def draw_boxes(image, boxes, color=(0, 255, 0)):
         cv2.rectangle(image, (x, y), (x + w, y + h), color, 4)
 
 
-def draw_landmarks(image, landmarks, color = (0, 0, 255)):
+def draw_landmarks(image, landmarks, color=(0, 0, 255), thickness=3):
     for (landmark_x, landmark_y) in landmarks:
-        cv2.circle(image, (int(landmark_x), int(landmark_y)), 3, color, -1)
+        cv2.circle(image, (int(landmark_x), int(landmark_y)), thickness, color, -1)
 
 
 def draw_face_landmarks(image, list_dictionary):
