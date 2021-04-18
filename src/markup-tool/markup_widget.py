@@ -1,3 +1,4 @@
+import numpy as np
 from PyQt5.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
@@ -18,6 +19,7 @@ import os
 from PyQt5.QtCore import QTimer
 from src.utils import crop_image, draw_landmarks
 from src.image_processor import ImageProcessor
+from src.emotion_processor import EmotionProcessor
 from src.common import Face
 from common import set_image
 
@@ -91,7 +93,7 @@ class MarkupWidget(QWidget):
         self.next_face_button.setMaximumSize(60, 30)
         self.previous_face_button.setMinimumSize(60, 30)
         self.next_face_button.setMinimumSize(60, 30)
-        self.classifications.addItems(['smile', 'not a smile'])
+        self.classifications.addItems(['not a smile', 'smile'])
 
         # create source buttons
         self.previous_button = QPushButton('<')
@@ -206,9 +208,11 @@ class MarkupWidget(QWidget):
 
         cv2.imwrite(self.dst_data_folder + "/{}.png".format(self.global_data_index), original_image)
 
+        mouth_landmarks = EmotionProcessor.extract_mouth_landmarks(landmarks)
+
         with open(self.dst_data_folder + "/{}.txt".format(self.global_data_index), 'w') as f:
-            for (x, y) in landmarks:
-                f.write("{:.2f},{:.2f}\n".format(float(x) / w, float(y) / h))
+            for (x, y) in mouth_landmarks:
+                f.write("{:.3f},{:.3f}\n".format(float(x) / w, float(y) / h))
 
             f.write(str(label))
 
@@ -295,7 +299,7 @@ class MarkupWidget(QWidget):
 
         if 0 <= self.current_face_index < len(self.current_faces):
             face = self.current_faces[self.current_face_index]
-            classification = self.classifications.currentIndex()  # 0 - smile, 1 - not a smile
+            classification = self.classifications.currentIndex()  # 0 - not a smile, 1 - smile
 
             self.approved_data.append((
                 self.current_face_index,

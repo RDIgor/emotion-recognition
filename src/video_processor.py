@@ -3,6 +3,7 @@ import json
 import utils
 import time
 from image_processor import ImageProcessor
+from common import Emotion
 
 
 class VideoProcessor:
@@ -64,6 +65,20 @@ class VideoProcessor:
             utils.draw_boxes(frame, [face.box], (0, 255, 0) if face.applicability else (0, 0, 255))
             utils.draw_landmarks(frame, face.five_landmarks, (0, 255, 0))
             utils.draw_landmarks(utils.crop_image(frame, face.box), face.landmarks)
+
+            if face.emotion is not None:
+                x = face.box[0]
+                y = face.box[1] - 20
+
+                if y < 0:
+                    y = 0
+
+                if face.emotion >= Emotion.SMILE:
+                    cv2.rectangle(frame, (x, y), (x + 100, y + 20), (0, 255, 0), cv2.FILLED)
+                    cv2.putText(frame, "smile", (x, y + 15), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 2)
+                else:
+                    cv2.rectangle(frame, (x, y), (x + 100, y + 20), (0, 0, 255), cv2.FILLED)
+                    cv2.putText(frame, "not a smile", (x, y + 15), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 2)
 
         cv2.putText(frame, f"FPS: {fps:.2f}", (10, 30), cv2.FONT_HERSHEY_COMPLEX, 1.0, (0, 0, 255), 4)
         cv2.putText(frame, f"Faces: {len(faces)}", (10, 60), cv2.FONT_HERSHEY_COMPLEX, 1.0, (0, 0, 255), 4)

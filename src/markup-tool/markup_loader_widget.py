@@ -146,14 +146,16 @@ class MarkupLoaderWidget(QWidget):
         # set image on the face label
         set_image(image, self.face_label)
 
-        # prepare landmarks
-        landmarks_image = cv2.resize(image, (self.face_landmarks_label.width(), self.face_landmarks_label.height()))
-        h, w = landmarks_image.shape[:2]
+        original_h, original_w = image.shape[:2]
+
         absolute_landmarks = []
         for (x, y) in landmarks:
-            absolute_landmarks.append((int(x * w), int(y * h)))
+            absolute_landmarks.append((int(x * original_w), int(y * original_h)))
 
-        draw_landmarks(landmarks_image, absolute_landmarks, (0, 0, 255), 2)
+        draw_landmarks(image, absolute_landmarks, (0, 0, 255), 2)
+
+        # prepare landmarks
+        landmarks_image = cv2.resize(image, (self.face_landmarks_label.width(), self.face_landmarks_label.height()))
 
         # set image on the face landmarks label
         set_image(landmarks_image, self.face_landmarks_label)

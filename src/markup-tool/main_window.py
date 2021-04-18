@@ -66,6 +66,7 @@ class MainWindow(QMainWindow):
         filepath = fname[0]
 
         if len(filepath) > 0:
+            self.setCentralWidget(self.central_widget)
             self.central_widget.set_source(filepath)
 
     def load_markup(self):
