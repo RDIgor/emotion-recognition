@@ -10,6 +10,9 @@
     "device": "gpu"
   },
   "face_landmark_detection": {
-    "weights": "/opt/dlib_model/backup/predictor.dat"
+    "weights": "/opt/dlib/python_examples/predictor.dat"
+  },
+  "emotion_recognition": {
+    "weights": "/opt/emotion/"
   }
 }

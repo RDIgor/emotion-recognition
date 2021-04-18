@@ -1,6 +1,6 @@
 import argparse
 from video_processor import VideoProcessor
-
+from utils import str2bool
 
 def str2bool(v):
     if isinstance(v, bool):
